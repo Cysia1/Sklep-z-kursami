@@ -29,8 +29,8 @@
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
-            <div >
-            <button id="login-submit" type="submit" class="btn btn-lg btn-primary" style="background-color:#E1528C; color:white; border:none; border-radius:64px; padding:10px 30px; font-size: 20px;" >Zaloguj się</button>
+            <div>
+                <button id="login-submit" type="submit" class="btn btn-lg btn-primary" style="background-color:#E1528C; color:white; border:none; border-radius:64px; padding:10px 30px; font-size: 20px;">Zaloguj się</button>
             </div>
 
             <div class="checkbox mb-3">
@@ -49,4 +49,64 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('account'); // Upewnij się, że id Twojego formularza to 'account'
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const emailInput = document.getElementById('Input_Email'); // Upewnij się, że id pola email to 'Input_Email'
+                    const passwordInput = document.getElementById('Input_Password'); // Upewnij się, że id pola hasło to 'Input_Password'
+                    const errorContainer = document.getElementById('login-error'); // Opcjonalny element do wyświetlania błędów
+
+                    if (!emailInput || !passwordInput) {
+                        console.error('Nie znaleziono pól email lub hasło.');
+                        return;
+                    }
+
+                    const email = emailInput.value;
+                    const password = passwordInput.value;
+
+                    fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username: email, password: password })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            return response.json().then(data => {
+                                throw new Error(data.message || 'Nieprawidłowa próba logowania.');
+                            });
+                        }
+                    })
+                    .then(data => {
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            console.log('Pomyślnie zalogowano, brak adresu przekierowania.');
+                            window.location.href = '/'; // Domyślne przekierowanie
+                        }
+                        if (data.token) {
+                            localStorage.setItem('authToken', data.token); // Opcjonalnie zapisz token
+                        }
+                        // Po przekierowaniu nie trzeba nic więcej robić tutaj
+                    })
+                    .catch(error => {
+                        console.error('Błąd logowania:', error);
+                        if (errorContainer) {
+                            errorContainer.textContent = error.message;
+                        } else {
+                            alert(error.message); // Pokaż alert, jeśli nie ma kontenera na błędy
+                        }
+                    });
+                });
+            } else {
+                console.error('Nie znaleziono formularza logowania o id "account".');
+            }
+        });
+    </script>
 }
