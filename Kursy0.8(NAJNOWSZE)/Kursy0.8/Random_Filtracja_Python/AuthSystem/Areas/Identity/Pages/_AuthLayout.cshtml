@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AuthLayout</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="menu">
+                <img src="~/images/logo_pzpp.png" alt="logo" width="100" style="height: auto;" />
+                <a asp-controller="Home" asp-action="Index">Strona główna</a>
+                <a asp-controller="Subscription" asp-action="Index">Subskrypcja</a>
+
+                <div class="dropdown">
+                    <a href="#">Kategorie <i class="fa fa-angle-down"></i></a>
+                    <div class="dropdown-content">
+                        <a asp-controller="Courses" asp-action="Category" asp-route-category="Programowanie">Programowanie</a>
+                        <a asp-controller="Courses" asp-action="Category" asp-route-category="Biznes">Biznes</a>
+                        <a asp-controller="Courses" asp-action="Category" asp-route-category="Marketing">Marketing</a>
+                        <a asp-controller="Courses" asp-action="Category" asp-route-category="Design">Design</a>
+                    </div>
+                </div>
+
+                <a asp-controller="Contact" asp-action="Index">Kontakt</a>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <partial name="_LoginPartial.cshtml" />
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login">Zaloguj/Zarejestruj</a>
+                    <div class="user-icon"><i class="fa fa-user"></i></div>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container-fluid">
+        @RenderBody()
+    </main>
+
+    <footer style="background-color: #564694; padding: 60px 0; text-align: center;">
+        <div style="font-size: 35px ; margin-bottom: 10px; padding:20px 0; color:white">
+            Zapisz się do Subskrypcji i bądź na bieżąco z wszystkimi kursami.
+        </div>
+        <a href="#" style="background-color: #E1528C; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">Subskrypcja ></a>
+    </footer>
+
+    <script src="~/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

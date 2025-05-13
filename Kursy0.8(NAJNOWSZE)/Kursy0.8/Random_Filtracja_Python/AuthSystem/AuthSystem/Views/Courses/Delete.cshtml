@@ -1,0 +1,33 @@
+﻿@model AuthSystem.Models.CoursesDetailViewModel
+
+<div class="container py-5">
+    <div class="bg-white p-5 rounded shadow-sm text-center">
+        <h2 class="mb-4 fw-bold">Czy na pewno chcesz usunąć ten kurs?</h2>
+
+        <h4 class="fw-bold">@Model.CourseName</h4>
+        <p class="text-muted">@Model.CourseDescription</p>
+        <p class="fw-bold">
+            Cena: <span style="color: #E1528C;">@Model.CoursePrice zł</span>
+        </p>
+
+        @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
+        {
+            <img src="@Model.ThumbnailUrl" alt="Zdjęcie Kursu" class="img-thumbnail mt-3" style="max-width: 300px;" />
+        }
+
+        <form asp-action="Delete" method="post" class="mt-4 d-flex justify-content-center gap-3">
+            <input type="hidden" asp-for="CourseId" />
+
+            <button type="submit" class="btn px-4 py-2 fw-bold"
+                    style="background-color: #E1528C; color: white; border-radius: 30px;">
+                Usuń
+            </button>
+
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-pill"
+               style="background-color: white; color: #E1528C; border-radius: 30px;">
+                >
+                Powrót do listy kursów
+            </a>
+        </form>
+    </div>
+</div>

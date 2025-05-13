@@ -1,0 +1,76 @@
+﻿@model AuthSystem.Models.PurchasedCourseViewModel
+@{
+    ViewData["Title"] = "Rozliczenie płatności";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header custom-header">
+                    <h4 class="mb-0">Rozliczenie</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Payment" asp-action="Confirm" method="post">
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Numer Karty*</label>
+                            <input type="text" id="cardNumber" name="CardNumber" class="form-control" required placeholder="1234 5678 9012 3456" />
+                            <span asp-validation-for="CardNumber" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="expiryDate" class="form-label">Data Ważności Karty*</label>
+                                <input type="text" id="expiryDate" name="ExpiryDate" class="form-control" required placeholder="MM/RR" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cvv" class="form-label">CVV/CVC (3 cyfry)*</label>
+                                <input type="text" id="cvv" name="Cvv" class="form-control" required placeholder="123" />
+                                <span asp-validation-for="Cvv" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="saveCard" name="SaveCard">
+                            <label class="form-check-label" for="saveCard">Zapisz moje dane płatnicze na przyszłość</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="background-color: #E1528C; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                            Złóż zamówienie
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header custom-header">
+                    <h4 class="mb-0">Szczegóły zakupu</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Ilość</th>
+                                <th>Kwota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Kurs 1</td>
+                                <td>1</td>
+                                <td>200 zł</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-end"><strong>Łącznie</strong></td>
+                                <td><strong>200 zł</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

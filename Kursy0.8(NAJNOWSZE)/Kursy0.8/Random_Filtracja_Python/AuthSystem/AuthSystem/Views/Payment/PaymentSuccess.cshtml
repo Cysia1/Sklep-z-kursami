@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Płatność Zakończona";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Upewnij się, że używasz poprawnego layoutu
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#paymentSuccessModal').modal('show');
+        });
+    </script>
+}
+
+<div class="modal fade" id="paymentSuccessModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="paymentSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+        <div class="modal-content" style="border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <div class="modal-header" style="border-bottom: none; padding-top: 30px; padding-left: 30px; padding-right: 30px;">
+                <h1 class="modal-title fs-5" id="paymentSuccessModalLabel" style="color: #555; font-weight: bold;">Dziękujemy za zakup kursu!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding-left: 30px; padding-right: 30px; color: #777; font-size: 0.9rem;">
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" style="fill: #fff; background-color: #A076F2; border-radius: 50%; padding: 3px;">
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                </div>
+                Na podany adres email wysłaliśmy potwierdzenie zakupu kursu.
+            </div>
+            <div class="modal-footer" style="border-top: none; padding: 30px; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal" style="color: #777; border-color: #ddd; padding: 10px 20px; border-radius: 25px; font-size: 0.9rem;">Sprawdź szczegóły zamówienia</button>
+                <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                    <button type="button" class="btn btn-primary ms-2" style="background-color: #E1528C; color: white; padding: 10px 20px; border: none; border-radius: 25px; font-size: 0.9rem;">Powrót do Strony Głównej</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
