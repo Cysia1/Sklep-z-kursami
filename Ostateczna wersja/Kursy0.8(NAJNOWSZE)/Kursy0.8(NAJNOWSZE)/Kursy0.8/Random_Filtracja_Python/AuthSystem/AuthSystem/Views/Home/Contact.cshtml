@@ -1,0 +1,40 @@
+﻿@{
+    Layout = User.Identity.IsAuthenticated ? "_Layout" : "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+    ViewData["Title"] = "Kontakt";
+}
+
+
+@{
+    ViewData["Title"] = "Kontakt";
+}
+
+@{
+    ViewBag.Title = "Kontakt";
+}
+
+
+<body>
+
+
+    <div class="contact-header">
+        <h2>Bądź z Nami w kontakcie</h2>
+    </div>
+
+    <div class="contact-section">
+        <h1>Masz jakieś pytania? Skontaktuj się z nami!</h1>
+
+        <div class="contact-info">
+            <div class="contact-item">
+                <h3>📞 Numer telefonu:</h3>
+                <p>0012334566</p>
+            </div>
+
+            <div class="contact-item">
+                <h3>📧 Adres email:</h3>
+                <p>johndoe@example.com</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
