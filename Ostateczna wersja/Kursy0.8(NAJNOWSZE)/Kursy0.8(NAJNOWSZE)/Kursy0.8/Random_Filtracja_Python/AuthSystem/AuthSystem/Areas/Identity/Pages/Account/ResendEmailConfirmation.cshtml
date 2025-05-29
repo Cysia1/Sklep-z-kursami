@@ -1,0 +1,56 @@
+﻿@page
+@model ResendEmailConfirmationModel
+@{
+    ViewData["Title"] = "Resend email confirmation";
+}
+
+@* <h1>@ViewData["Title"]</h1>
+<h2>Enter your email.</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Email" class="form-label"></label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+
+
+<div class="d-flex justify-content-center align-items-center" style=" display: flex;
+    justify-content: center;
+    align-items: flex-start;">
+    <div class="p-5 bg-white shadow rounded" style="max-width: 400px; width: 100%; position:center">
+        <h2 class="fw-bold mb-3">Resetuj hasło</h2>
+        <p>Wpisz swój adres email, a wyślemy Ci link do zmiany hasła.</p>
+
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3" role="alert"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.Email" class="form-label fw-semibold">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com"
+                       style="border-radius: 32px; padding: 10px 15px;" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn w-100" style="background-color:#E1528C; color:white; border:none; border-radius:64px; padding:10px 30px; font-size: 18px;">
+                Wyślij link resetujący
+            </button>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

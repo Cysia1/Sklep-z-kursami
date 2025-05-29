@@ -1,0 +1,14 @@
+CREATE DATABASE BazaZMultimediami;
+
+use BazaZMultimediami
+
+CREATE TABLE [dbo].[Courses](
+    [CourseId] [int] IDENTITY(1,1) NOT NULL,
+    [CourseName] [nvarchar](255) NULL,
+    [CourseDescription] [nvarchar](max) NULL,
+    [CoursePrice] [decimal](10, 2) NULL,
+    [CourseType] [nvarchar](50) NULL,
+    [Thumbnail] [varbinary](max) NULL);
+
+ALTER TABLE Courses
+ADD VideoUrl NVARCHAR(MAX) NULL;

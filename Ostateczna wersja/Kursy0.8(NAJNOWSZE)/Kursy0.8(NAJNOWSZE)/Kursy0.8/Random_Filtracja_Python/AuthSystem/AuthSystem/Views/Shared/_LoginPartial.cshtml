@@ -1,0 +1,60 @@
+﻿@using AuthSystem.Data
+@using Microsoft.AspNetCore.Identity
+@using AuthSystem.Areas.Identity.Data;
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var firstName = user?.FirstName; // zakładając, że masz takie pole w ApplicationUser
+}
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-dark" asp-controller="User" asp-action="UserPanel" title="Panel użytkownika">
+                Witaj @firstName!
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="background-color: #E1528C; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                Wyloguj się
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <div class="modal-header" style="border-bottom: none; padding-top: 30px; padding-left: 30px; padding-right: 30px;">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color: #555; font-weight: bold;">Wylogowywanie...</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="padding-left: 30px; padding-right: 30px; color: #777; font-size: 0.9rem;">
+                            Czy na pewno chcesz się wylogować?
+                        </div>
+                        <div class="modal-footer" style="border-top: none; padding: 30px; display: flex; justify-content: center;">
+                            <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal" style="color: #777; border-color: #ddd; padding: 10px 20px; border-radius: 25px; font-size: 0.9rem;">Nie</button>
+                            <button type="button" class="btn btn-primary ms-2" id="confirmLogout" style="background-color: #E1528C; color: white; padding: 10px 20px; border: none; border-radius: 25px; font-size: 0.9rem;">
+                                Tak
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden Logout Form -->
+            <form id="logoutForm" class="d-none" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+            </form>
+
+            <script>
+                document.getElementById("confirmLogout").addEventListener("click", function() {
+                    document.getElementById("logoutForm").submit();
+                });
+            </script>
+
+        </li>
+    }
+</ul>
