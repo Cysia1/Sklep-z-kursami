@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sklep z Kursami</title>>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AuthSystem.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <img src="~/images/logo_pzpp.png" alt="logo" width="100" height="auto" />
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SkillHolder</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Strona główna</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Subscription" asp-action="Index">Subskrypcja</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Kategorie
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-controller="Courses" asp-action="Category" asp-route-category="Programowanie">Programowanie</a></li>
+                                <li><a class="dropdown-item" asp-controller="Courses" asp-action="Category" asp-route-category="Biznes">Biznes</a></li>
+                                <li><a class="dropdown-item" asp-controller="Courses" asp-action="Category" asp-route-category="Marketing">Marketing</a></li>
+                                <li><a class="dropdown-item" asp-controller="Courses" asp-action="Category" asp-route-category="Design">Design</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Contact" asp-action="Index">Kontakt</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                             <partial name="_LoginPartial.cshtml" />
+                        }
+                       
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer style="background-color: #564694; padding: 60px 0; text-align: center;">
+        <div style="font-size: 35px ; margin-bottom: 10px; padding:20px 0; color:white">
+            Zapisz się do Subskrypcji i bądź na bieżąco z wszystkimi kursami.
+        </div>
+        <a href="#" style="background-color: #E1528C; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">Subskrypcja ></a>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Zaloguj się";
+    Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+}
+<link rel="stylesheet" href="~/css/site.css" />
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Zaloguj się teraz</h2>
+        <p>Jeśli nie masz konta, <a asp-page="./Register">załóż nowe konto.</a></p>
+
+        <form id="account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" style="border-radius:64px;" />
+
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group password-container">
+                <label for="password">Hasło</label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="**********" style="border-radius:64px;" />
+
+                <span class="toggle-password" style=""><i class="fa fa-eye"></i></span>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div>
+                <button id="login-submit" type="submit" class="btn btn-lg btn-primary" style="background-color:#E1528C; color:white; border:none; border-radius:64px; padding:10px 30px; font-size: 20px;">Zaloguj się</button>
+            </div>
+            <div class="form-group checkbox-group" style="padding: 20px 0">
+                <input class="form-check-input" asp-for="Input.RememberMe" type="checkbox" />
+                <label class="form-check-label" asp-for="Input.RememberMe">Zapamiętaj mnie</label>
+            </div>
+
+
+            <p><a asp-page="./ForgotPassword">Nie pamiętasz hasła?</a></p>
+
+        </form>
+    </div>
+    <div class="login-image"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

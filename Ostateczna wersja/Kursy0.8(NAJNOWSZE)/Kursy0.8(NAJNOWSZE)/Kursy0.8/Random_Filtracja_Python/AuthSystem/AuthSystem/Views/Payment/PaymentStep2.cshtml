@@ -1,0 +1,136 @@
+﻿@model AuthSystem.Models.PurchasedCourseViewModel
+@{
+    ViewData["Title"] = "Rozliczenie płatności";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header custom-header">
+                    <h4 class="mb-0">Rozliczenie</h4>
+                </div>
+                <div class="card-body">
+                    <form id="payment-form" asp-controller="Payment" asp-action="Confirm" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label for="card-element" class="form-label">Dane Karty*</label>
+                            <div id="card-element">
+                            </div>
+                            <div id="card-errors" class="text-danger" role="alert"></div>
+                        </div>
+
+                        <input type="hidden" asp-for="StripeToken" id="stripeToken" />
+                        <input type="hidden" asp-for="CoursePrice" value="@Model.CoursePrice" />
+                        <input type="hidden" name="courseId" value="@ViewBag.CourseId" />
+                        <input type="hidden" name="Email" value="@ViewBag.Email" />
+
+                        <button type="submit" class="btn btn-primary" id="submit-button"
+                                style="background-color: #E1528C; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                            Zapłać teraz
+                        </button>
+                        <a asp-controller="Payment"
+                           asp-action="PaymentStep1"
+                           asp-route-courseId="@ViewBag.CourseId"
+                           class="btn btn-outline-secondary px-4 py-2 rounded-pill" style="background-color: white; color: #E1528C; border-radius: 30px">
+                            &lt; Powrót do szczegółów kursu
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header custom-header">
+                    <h4 class="mb-0">Szczegóły zakupu</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Ilość</th>
+                                <th>Kwota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Kurs o ID: @ViewBag.CourseId</td>
+                                <td>1</td>
+                                <td>@Model.CoursePrice zł</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-end"><strong>Łącznie</strong></td>
+                                <td><strong>@Model.CoursePrice zł</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe("pk_test_51RQYqPPYyL8Kg4nRBOYMrbS5eNSAFKZXnnx7UwVUSeq45UkzMN6zou7wAlgkVdgv7VFYJsyjwXnyaUIr4LsdzDk30045sXQMjo");
+        var elements = stripe.elements();
+
+        var cardElement = elements.create('card', {
+            hidePostalCode: true
+        });
+        cardElement.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        var submitButton = document.getElementById('submit-button');
+        var cardErrors = document.getElementById('card-errors');
+        var stripeTokenInput = document.getElementById('stripeToken');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            submitButton.disabled = true;
+            cardErrors.textContent = '';
+
+            stripe.createToken(cardElement).then(function(result) {
+                if (result.error) {
+                    cardErrors.textContent = result.error.message;
+                    submitButton.disabled = false;
+                } else {
+                    stripeTokenInput.value = result.token.id;
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: new URLSearchParams(new FormData(form))
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error('Błąd serwera: ' + text) });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '@Url.Action("PaymentSuccess", "Payment")';
+                        } else {
+                            cardErrors.textContent = data.error || 'Wystąpił nieznany błąd płatności.';
+                            submitButton.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Błąd:', error);
+                        cardErrors.textContent = error.message;
+                        submitButton.disabled = false;
+                    });
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿@model List<string>
+
+@if (Model != null && Model.Any())
+{
+    
+
+        @foreach (var category in Model)
+        {
+            <a class="dropdown-item" asp-controller="Courses" asp-action="Index" asp-route-courseType="@category">@category</a>
+        }
+
+}
+else
+{
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Kategorie
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li><span class="dropdown-item">Brak kategorii</span></li>
+    </ul>
+}

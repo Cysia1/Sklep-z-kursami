@@ -1,0 +1,233 @@
+﻿@model AuthSystem.Models.UserPanelViewModel
+@using AuthSystem.Entities
+@using Microsoft.AspNetCore.Identity
+@using AuthSystem.Areas.Identity.Data
+@inject UserManager<AuthSystem.Areas.Identity.Data.ApplicationUser> UserManager
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUserId = UserManager.GetUserId(User);
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group" id="courseTab" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="basic-tab" data-bs-toggle="list" href="#basic" role="tab" style="background-color: #E1528C; color: white;">Ustawienia konta</a>
+                <a class="list-group-item list-group-item-action" id="purchased-courses-tab" data-bs-toggle="list" href="#purchased-courses" role="tab">Zakupione kursy</a>
+                <a class="list-group-item list-group-item-action" id="my-courses-tab" data-bs-toggle="list" href="#my-courses" role="tab">Twoje kursy</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content" id="courseTabContent">
+                <div class="tab-pane fade show active" id="basic" role="tabpanel">
+                    <h2 class="mb-3">Ustawienia konta</h2>
+                    <p class="mb-4">Tutaj możesz zmienić dane swojego konta i zarządzać swoją subskrypcją.</p>
+
+                    <h5 class="mb-3 fw-bold">Informacje Użytkownika</h5>
+
+                    <form asp-action="UpdateUserData" method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <input name="FirstName" type="text" class="form-control rounded-pill bg-light" placeholder="Imię" required value="@Model.FirstName">
+                            </div>
+                            <div class="col-md-6">
+                                <input name="LastName" type="text" class="form-control rounded-pill bg-light" placeholder="Nazwisko" required value="@Model.LastName">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <input name="Email" type="email" class="form-control rounded-pill bg-light" placeholder="Email" required value="@Model.Email">
+                            </div>
+                            <div class="col-md-6">
+                                <input name="PhoneNumber" type="text" class="form-control rounded-pill bg-light" placeholder="Numer telefonu" value="@Model.PhoneNumber">
+                            </div>
+                        </div>
+                        <h5 class="mb-3 fw-bold">Zmiana Hasła</h5>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <input name="CurrentPassword" type="password" class="form-control rounded-pill bg-light" placeholder="Stare hasło">
+                            </div>
+                            <div class="col-md-6">
+                                <input name="NewPassword" type="password" class="form-control rounded-pill bg-light" placeholder="Nowe hasło">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn" style="background-color: #E1528C; color: white; padding: 12px 30px; border-radius: 30px; font-size: 18px; font-weight: bold;">Zapisz zmiany</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <h4 class="mb-3 fw-bold text-danger">Strefa zagrożenia</h4>
+                        <p class="text-muted">Usunięcie konta jest operacją nieodwracalną.</p>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                style="color: white; padding: 12px 30px; border-radius: 30px; font-size: 18px; font-weight: bold;">
+                            Usuń konto
+                        </button>
+                    </div>
+
+                    <!-- Pop-up do usuwania konta-->
+                    <div class="modal fade" id="deleteUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content" style="border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                                <div class="modal-header" style="border-bottom: none; padding-top: 30px; padding-left: 30px; padding-right: 30px;">
+                                    <h5 class="modal-title text-danger" id="deleteUserModalLabel">Potwierdzenie usunięcia konta</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="#DeleteAcount" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="padding-left: 30px; padding-right: 30px; color: #777; font-size: 0.9rem;">
+                                    Czy na pewno chcesz trwale usunąć swoje konto? Wszystkie Twoje kursy zostaną usunięte. Tej operacji nie można cofnąć.
+                                </div>
+                                <div class="modal-footer" style="border-top: none; padding: 30px; display: flex; justify-content: center;">
+                                    <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal" style="color: #777; border-color: #ddd; padding: 10px 20px; border-radius: 25px; font-size: 0.9rem;">Anuluj</button>
+                                    <form asp-controller="User" asp-action="DeleteAccount" method="post">
+                                        <button type="submit" class="btn btn-danger btn-primary ms-2" style="color: white; padding: 10px 20px; border: none; border-radius: 25px; font-size: 0.9rem;">Tak, usuń moje konto</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="purchased-courses" role="tabpanel">
+                    <h2 class="mb-3">Zakupione kursy</h2>
+                    <p class="mb-4">Lista kursów, które zakupiłeś od innych użytkowników.</p>
+
+                    @if (!Model.PurchasedCourses.Any())
+                    {
+                        <p class="text-muted">Nie kupiłeś jeszcze żadnego kursu od innych użytkowników.</p>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            @foreach (var course in Model.PurchasedCourses)
+                            {
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 position-relative">
+                                        <div class="purchased-badge">Zakupiony</div>
+                                        @if (!string.IsNullOrEmpty(course.ThumbnailUrl))
+                                        {
+                                            <img src="@course.ThumbnailUrl" class="card-img-top" alt="@course.CourseName" style="height: 150px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <img src="https://via.placeholder.com/300x150?text=Brak+zdjęcia" class="card-img-top" alt="Brak zdjęcia" style="height: 150px; object-fit: cover;">
+                                        }
+                                        <div class="card-body d-flex flex-column justify-content-between">
+                                            <h5 class="card-title">@course.CourseName</h5>
+                                            <p class="card-text">@course.CourseType</p>
+                                            <p class="card-text">Cena: @(course.CoursePrice?.ToString("C") ?? "N/A")</p>
+                                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn"
+                                               style="background-color: #8267eb; color: white;">Zobacz kurs</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <div class="text-center mt-4">
+                        <a asp-controller="Courses" asp-action="Index" class="btn" style="background-color: #E1528C; color: white; padding: 12px 30px; border-radius: 30px; font-size: 18px; font-weight: bold;">Kup kurs</a>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="my-courses" role="tabpanel">
+                    <h2 class="mb-3">Twoje kursy</h2>
+                    <p class="mb-4">Kursy stworzone przez ciebie.</p>
+
+                    @if (!Model.MyCourses.Any())
+                    {
+                        <p class="text-muted">Nie dodałeś jeszcze żadnego kursu.</p>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            @foreach (var course in Model.MyCourses)
+                            {
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 position-relative">
+                                        <div class="my-course-badge">Twój kurs</div>
+                                        @if (!string.IsNullOrEmpty(course.ThumbnailUrl))
+                                        {
+                                            <img src="@course.ThumbnailUrl" class="card-img-top" alt="@course.CourseName" style="height: 150px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <img src="https://via.placeholder.com/300x150?text=Brak+zdjęcia" class="card-img-top" alt="Brak zdjęcia" style="height: 150px; object-fit: cover;">
+                                        }
+                                        <div class="card-body d-flex flex-column justify-content-between">
+                                            <h5 class="card-title">@course.CourseName</h5>
+                                            <p class="card-text">@course.CourseType</p>
+                                            <p class="card-text">Cena: @(course.CoursePrice?.ToString("C") ?? "N/A")</p>
+                                            <div class="d-flex justify-content-between mt-2">
+                                                <a asp-controller="Courses" asp-action="Edit" asp-route-id="@course.CourseId" class="btn" style="background-color: #8267eb; color: white;">Więcej</a>
+                                                <a asp-controller="Courses" asp-action="Edit" asp-route-id="@course.CourseId" class="btn" style="background-color: #eb772d; color: white;">Edytuj</a>
+                                                <a asp-controller="Courses" asp-action="Delete" asp-route-id="@course.CourseId" class="btn" style="background-color: #E1528C; color: white;">Usuń</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    <div class="text-center mt-4">
+                        <a asp-controller="Courses" asp-action="Create" class="btn" style="background-color: #E1528C; color: white; padding: 12px 30px; border-radius: 30px; font-size: 18px; font-weight: bold;">Dodaj Kurs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var triggerTabList = [].slice.call(document.querySelectorAll('#courseTab a'))
+        triggerTabList.forEach(function (triggerEl) {
+            var tabTrigger = new bootstrap.Tab(triggerEl)
+
+            triggerEl.addEventListener('click', function (event) {
+                event.preventDefault()
+                tabTrigger.show()
+                triggerTabList.forEach(function (el) {
+                    el.style.backgroundColor = ''
+                    el.style.color = ''
+                })
+                triggerEl.style.backgroundColor = '#E1528C'
+                triggerEl.style.color = 'white'
+            })
+        })
+    </script>
+}
+
+<style>
+    .my-course-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #8267eb;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.8em;
+        font-weight: bold;
+        border-bottom-left-radius: 10px;
+        z-index: 10;
+        transform: translate(0%, 0%);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    .purchased-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #eb772d;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.8em;
+        font-weight: bold;
+        border-bottom-left-radius: 10px;
+        z-index: 10;
+    }
+</style>
